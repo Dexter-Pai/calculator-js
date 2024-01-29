@@ -1,10 +1,16 @@
 let x = 1;
 let y = 2;
+let str = '';
+console.log(typeof(str));
 
 let btnArray = []
 for (let i = 0; i < 10; i++) {
     btnArray[i] = document.querySelector(`#btn${i + 1}`);
-    btnArray[i].addEventListener('click', (e) => console.log(`clicked btn ${e.target.textContent}`))
+    btnArray[i].addEventListener('click', (e) => {
+        str += e.target.textContent;
+        console.log(`clicked btn ${e.target.textContent}`);
+        console.log(str);
+        })
 }
 console.log(btnArray)
 
