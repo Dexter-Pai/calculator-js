@@ -28,6 +28,9 @@ class Button {
     }
     // update() {console.log('updated')}
 }
+let a = '100'
+a.slice(0, a.length -1)
+console.log(a.slice(0, a.length -1))
 
 // ----------------------------------------------------------
 // Global Variables
@@ -63,12 +66,19 @@ const addDOM = (() => {
     display.style.height = '2rem';
     display.textContent = 0;
 
-    // add clear button
+    // add clear all button
     clearAllBtn = document.createElement('button');
     document.body.appendChild(clearAllBtn);
     clearAllBtn.textContent = 'C';
     clearAllBtn.setAttribute('class', 'btn');
     clearAllBtn.setAttribute('id', 'cBtn');
+
+    // add undo button
+    undoBtn = document.createElement('button');
+    document.body.appendChild(undoBtn);
+    undoBtn.textContent = 'CE';
+    undoBtn.setAttribute('class', 'btn');
+    undoBtn.setAttribute('id', 'cEBtn');
 
     // add buttons
     for (let i = 1; i <= 10; i++) {
@@ -135,6 +145,17 @@ const addEvent = (() => {
         operatorClicked = false;
         display.textContent = '0';
     })
+
+    // undo button events
+    undoBtn.addEventListener('click', () => {
+        let text = display.textContent;
+        if (text == 0);
+        else {
+
+            // todo
+            (text / 10 <= 1 && text.length == 1) ? display.textContent = '0' : display.textContent = text.slice(0, text.length - 1);
+        }
+    })
 })();
 
 
@@ -180,3 +201,4 @@ function calculate(num1, operation) {
 // todo
 // = functionality
 // +/- functionality
+// check ce functionality when floating points are added
