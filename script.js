@@ -163,6 +163,16 @@ const addEvent = (() => {
         currentOperator = null;
         userInput = null;
     })
+
+    // change sign button event
+    changeSignBtn.addEventListener('click', () => {
+        if (display.textContent[0] === '-') display.textContent = display.textContent.replace('-', '');
+        else if (!(display.textContent === '0')) {
+            let tmp = [...display.textContent];
+            tmp.unshift('-');
+            display.textContent = tmp.join('');
+        } ;
+    })
 })();
 
 // calculation handlers
