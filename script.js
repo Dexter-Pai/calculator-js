@@ -17,7 +17,8 @@ class Button {
     addEvent() {
         this.node.addEventListener('click', () => {
             if (!operatorClicked) {
-                display.textContent += `${this.value}`;
+                if (display.textContent == 0) display.textContent = `${this.value}`;
+                else display.textContent += `${this.value}`;
             } else {
                 operatorClicked = false;
                 display.textContent = '';
@@ -25,16 +26,15 @@ class Button {
             }
         });
     }
-    update() {console.log('updated')}
+    // update() {console.log('updated')}
 }
 
 // ----------------------------------------------------------
 // Global Variables
 // ----------------------------------------------------------
 let display;
-let equalBtn, changeSignBtn, clearBtn, allClearBtn;   
-let currentOperator, userInput
-let total;
+let equalBtn, changeSignBtn, clearAllBtn, undoBtn;   
+let currentOperator, userInput, total = null;
 let operatorClicked = false;
 const buttons = [];
 
@@ -61,11 +61,14 @@ const addDOM = (() => {
     display = document.createElement('div');
     document.body.appendChild(display);
     display.style.height = '2rem';
+    display.textContent = 0;
 
     // add clear button
-    
-
-
+    clearAllBtn = document.createElement('button');
+    document.body.appendChild(clearAllBtn);
+    clearAllBtn.textContent = 'C';
+    clearAllBtn.setAttribute('class', 'btn');
+    clearAllBtn.setAttribute('id', 'cBtn');
 
     // add buttons
     for (let i = 1; i <= 10; i++) {
@@ -101,9 +104,11 @@ const addDOM = (() => {
 // Adding Event Handlers
 // ----------------------------------------------------------
 const addEvent = (() => {
+
+    // operator buttons events
     for (let each in operations) {
         operations[each].node.addEventListener('click', () => {
-            if (total == undefined) {
+            if (total == null) {
                 // total = Math.round((Number(display.textContent)) * 100) / 100;
                 total = Number(display.textContent);
                 currentOperator = operations[each].value;
@@ -111,7 +116,7 @@ const addEvent = (() => {
 
             } else {
                 console.log(operations[each].value);
-                if (currentOperator == undefined) currentOperator = operations[each].value;
+                if (currentOperator == null) currentOperator = operations[each].value;
                 // userInput = Math.round((Number(display.textContent)) * 100) / 100;
                 userInput = Number(display.textContent);
                 if (!operatorClicked) calculate(userInput, currentOperator);
@@ -121,6 +126,15 @@ const addEvent = (() => {
             display.textContent = total;
         });
     }
+
+    // clear-all button events
+    clearAllBtn.addEventListener('click', () => {
+        userInput = null;
+        currentOperator = null;
+        total = null;
+        operatorClicked = false;
+        display.textContent = '0';
+    })
 })();
 
 
