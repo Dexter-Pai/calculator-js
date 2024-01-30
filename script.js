@@ -8,12 +8,23 @@ console.log(typeof(str));
 
 let display;
 const buttons = [];
+
 const operations = {
-    add: 'add',
-    subtract: 'subtract',
-    multiply: 'multiply',
-    divide: 'divide',
+    add: {
+        value: 'add', sign: '+',
+    },
+    subtract: {
+        value: 'subtract', sign: '-',
+    },
+    multiply: {
+        value: 'multiply', sign: '*',
+    },
+    divide: {
+        value: 'divide', sign: '/',
+    },
 }
+
+console.log(operations.add)
 // ----------------------------------------------------------
 // Constructor
 // ----------------------------------------------------------
@@ -56,7 +67,19 @@ const addingDOM = (() => {
             tmp.addEvent();
             buttons.push(tmp);
         }
-        console.table(buttons);
+    })();
+
+    // add operation buttons
+    (() => {
+        for (const each in operations) {
+            let entry = operations[each];
+            let tmp = document.createElement('button');
+            document.body.appendChild(tmp);
+            tmp.setAttribute('id', entry.value);
+            tmp.setAttribute('class', 'btn');
+            tmp.textContent = entry.sign;
+            entry.node = tmp;
+        };
     })();
 })();
 
