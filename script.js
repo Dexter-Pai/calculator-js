@@ -15,7 +15,15 @@ class Button {
         this.node.textContent = `${this.value}`;
     }
     addEvent() {
-        this.node.addEventListener('click', () => display.textContent += `${this.value}`);
+        this.node.addEventListener('click', () => {
+            if (!operatorClicked) {
+                display.textContent += `${this.value}`;
+            } else {
+                operatorClicked = false;
+                display.textContent = '';
+                display.textContent += `${this.value}`;
+            }
+        });
     }
     update() {console.log('updated')}
 }
@@ -25,7 +33,8 @@ class Button {
 // ----------------------------------------------------------
 let display;
 let equalBtn;   
-let currentOperator, firstValue, secondValue;
+let currentOperator, valueOne, valueTwo;
+let operatorClicked = false;
 const buttons = [];
 
 const operations = {
@@ -91,7 +100,8 @@ const addEvent = (() => {
         operations[each].node.addEventListener('click', () => {
             console.log('clicked');
             currentOperator = operations[each].value;
-            firstValue = Number(display.textContent);
+            operatorClicked = true;
+            valueOne = Number(display.textContent);
         });
     }
 })();
