@@ -32,8 +32,9 @@ class Button {
 // Global Variables
 // ----------------------------------------------------------
 let display;
-let equalBtn;   
-let currentOperator, valueOne, valueTwo;
+let equalBtn, changeSignBtn, clearBtn, allClearBtn;   
+let currentOperator, userInput
+let total;
 let operatorClicked = false;
 const buttons = [];
 
@@ -57,8 +58,13 @@ const operations = {
 // ----------------------------------------------------------
 const addDOM = (() => {
     // add display
-    display = document.createElement('textarea');
+    display = document.createElement('div');
     document.body.appendChild(display);
+    display.style.height = '2rem';
+
+    // add clear button
+    
+
 
 
     // add buttons
@@ -80,7 +86,6 @@ const addDOM = (() => {
         tmp.setAttribute('class', 'btn');
         tmp.textContent = entry.sign;
         entry.node = tmp;
-        console.log(entry);
     };
 
     // add equal button
@@ -96,24 +101,46 @@ const addDOM = (() => {
 // Adding Event Handlers
 // ----------------------------------------------------------
 const addEvent = (() => {
-    for (each in operations) {
+    for (let each in operations) {
         operations[each].node.addEventListener('click', () => {
-            console.log('clicked');
-            currentOperator = operations[each].value;
-            operatorClicked = true;
-            valueOne = Number(display.textContent);
+            if (total == undefined) {
+                // total = Math.round((Number(display.textContent)) * 100) / 100;
+                total = Number(display.textContent);
+                currentOperator = operations[each].value;
+                operatorClicked = true;
+
+            } else {
+                console.log(operations[each].value);
+                if (currentOperator == undefined) currentOperator = operations[each].value;
+                // userInput = Math.round((Number(display.textContent)) * 100) / 100;
+                userInput = Number(display.textContent);
+                if (!operatorClicked) calculate(userInput, currentOperator);
+                currentOperator = operations[each].value;
+                operatorClicked = true;
+            }
+            display.textContent = total;
         });
     }
 })();
 
 
 // console.log(calculate(1,2,operations.add));
-function calculate(num1, num2, operation) {
+function calculate(num1, operation) {
     switch (operation) {
-        case(operations.add): return num1 + num2;
-        case(operations.subtract): return num1 - num2;
-        case(operations.multiply): return num1 * num2;
-        case(operations.divide): return num1 / num2;
+        case(operations.add.value): 
+        total += num1;
+        break;
+        case(operations.subtract.value): 
+        total -= num1;
+        break;
+        case(operations.multiply.value): 
+        total *= num1;
+        total = Math.round(total * 1000) / 1000;
+        break;
+        case(operations.divide.value): 
+        total /= num1;
+        total = Math.round(total * 1000) / 1000;
+        break;
     }
 }
 
@@ -128,3 +155,14 @@ function calculate(num1, num2, operation) {
 //     }
 //     return total;
 // }
+
+
+
+// bugs
+// 2/2 AT THE START IS BUGGING // solved
+// infinity when divided by 2
+// floating precision // solved
+
+// todo
+// = functionality
+// +/- functionality
