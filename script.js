@@ -1,12 +1,31 @@
 // ----------------------------------------------------------
+// Constructor
+// ----------------------------------------------------------
+class Button {
+    constructor (name, value) {
+        this.name = name;
+        this.value = value;
+        this.node;
+    }
+    initialize() {
+        this.node = document.createElement('button');
+        document.body.appendChild(this.node);
+        this.node.setAttribute('id', `${this.name}`);
+        this.node.setAttribute('class', `btn`);
+        this.node.textContent = `${this.value}`;
+    }
+    addEvent() {
+        this.node.addEventListener('click', () => display.textContent += `${this.value}`);
+    }
+    update() {console.log('updated')}
+}
+
+// ----------------------------------------------------------
 // Global Variables
 // ----------------------------------------------------------
-let x = 1;
-let y = 2;
-let str = '';
-console.log(typeof(str));
-
 let display;
+let equalBtn;   
+let currentOperator, firstValue, secondValue;
 const buttons = [];
 
 const operations = {
@@ -24,63 +43,57 @@ const operations = {
     },
 }
 
-console.log(operations.add)
-// ----------------------------------------------------------
-// Constructor
-// ----------------------------------------------------------
-class Button {
-    constructor (name, value) {
-        this.name = name;
-        this.value = value;
-        this.node;
-    }
-    initialize() {
-        this.node = document.createElement('button');
-        document.body.appendChild(this.node);
-        this.node.setAttribute('id', `${this.name}`);
-        this.node.setAttribute('class', `btn`);
-        this.node.textContent = `${this.value}`;
-    }
-    addEvent() {
-        this.node.addEventListener('click', () => console.log(`button ${this.value} clicked`));
-    }
-    update() {console.log('updated')}
-}
-
 // ----------------------------------------------------------
 // Adding DOM Elements
 // ----------------------------------------------------------
-const addingDOM = (() => {
+const addDOM = (() => {
     // add display
-    (() => {
-        display = document.createElement('textarea');
-        document.body.appendChild(display);
-    })();
+    display = document.createElement('textarea');
+    document.body.appendChild(display);
+
 
     // add buttons
-    (() => {
-        for (let i = 1; i <= 10; i++) {
-            let tmp;
-            if (i == 10) tmp = new Button('btn0', 0);
-            else tmp = new Button(`btn${i}`, i);
-            tmp.initialize();
-            tmp.addEvent();
-            buttons.push(tmp);
-        }
-    })();
+    for (let i = 1; i <= 10; i++) {
+        let tmp;
+        if (i == 10) tmp = new Button('btn0', 0);
+        else tmp = new Button(`btn${i}`, i);
+        tmp.initialize();
+        tmp.addEvent();
+        buttons.push(tmp);
+    }
 
     // add operation buttons
-    (() => {
-        for (const each in operations) {
-            let entry = operations[each];
-            let tmp = document.createElement('button');
-            document.body.appendChild(tmp);
-            tmp.setAttribute('id', entry.value);
-            tmp.setAttribute('class', 'btn');
-            tmp.textContent = entry.sign;
-            entry.node = tmp;
-        };
-    })();
+    for (const each in operations) {
+        let entry = operations[each];
+        let tmp = document.createElement('button');
+        document.body.appendChild(tmp);
+        tmp.setAttribute('id', entry.value);
+        tmp.setAttribute('class', 'btn');
+        tmp.textContent = entry.sign;
+        entry.node = tmp;
+        console.log(entry);
+    };
+
+    // add equal button
+    equalBtn = document.createElement('button');
+    document.body.appendChild(equalBtn);
+    equalBtn.setAttribute('id', 'equalbtn');
+    equalBtn.setAttribute('class', 'btn');
+    equalBtn.textContent = '=';
+
+})();
+
+// ----------------------------------------------------------
+// Adding Event Handlers
+// ----------------------------------------------------------
+const addEvent = (() => {
+    for (each in operations) {
+        operations[each].node.addEventListener('click', () => {
+            console.log('clicked');
+            currentOperator = operations[each].value;
+            firstValue = Number(display.textContent);
+        });
+    }
 })();
 
 
