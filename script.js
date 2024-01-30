@@ -16,6 +16,10 @@ class Button {
     }
     addEvent() {
         this.node.addEventListener('click', () => {
+            if (equalClicked) {
+                display.textContent = '';
+                equalClicked = false;
+            }
             if (!operatorClicked) {
                 if (display.textContent == 0) display.textContent = `${this.value}`;
                 else display.textContent += `${this.value}`;
@@ -26,11 +30,7 @@ class Button {
             }
         });
     }
-    // update() {console.log('updated')}
 }
-let a = '100'
-a.slice(0, a.length -1)
-console.log(a.slice(0, a.length -1))
 
 // ----------------------------------------------------------
 // Global Variables
@@ -39,6 +39,7 @@ let display;
 let equalBtn, changeSignBtn, clearAllBtn, undoBtn;   
 let currentOperator, userInput, total = null;
 let operatorClicked = false;
+let equalClicked = false;
 const buttons = [];
 
 const operations = {
@@ -60,27 +61,33 @@ const operations = {
 // Adding DOM Elements
 // ----------------------------------------------------------
 const addDOM = (() => {
+
+    //template function for making elements and asigning values
+    function makeElement(idName = '', className = '', textContent = '', elementType = 'button', parentNode = document.body) {
+        let element = document.createElement(elementType);
+        parentNode.appendChild(element);
+        element.textContent = textContent;
+        element.setAttribute('class', className);
+        element.setAttribute('id', idName);
+        return element;
+    }
+    // ------------------------------------------------------
+
     // add display
-    display = document.createElement('div');
-    document.body.appendChild(display);
+    display = makeElement(undefined, 'display', undefined, 'div');
     display.style.height = '2rem';
     display.textContent = 0;
 
     // add clear all button
-    clearAllBtn = document.createElement('button');
-    document.body.appendChild(clearAllBtn);
-    clearAllBtn.textContent = 'C';
-    clearAllBtn.setAttribute('class', 'btn');
-    clearAllBtn.setAttribute('id', 'cBtn');
+    clearAllBtn = makeElement('cBtn', 'btn', 'C');
 
     // add undo button
-    undoBtn = document.createElement('button');
-    document.body.appendChild(undoBtn);
-    undoBtn.textContent = 'CE';
-    undoBtn.setAttribute('class', 'btn');
-    undoBtn.setAttribute('id', 'cEBtn');
+    undoBtn = makeElement('cEBtn', 'btn', 'CE');
 
-    // add buttons
+    // add change sign button
+    changeSignBtn = makeElement('sign', 'btn', '+/-');
+
+    // add buttons 1 to 0
     for (let i = 1; i <= 10; i++) {
         let tmp;
         if (i == 10) tmp = new Button('btn0', 0);
@@ -93,20 +100,13 @@ const addDOM = (() => {
     // add operation buttons
     for (const each in operations) {
         let entry = operations[each];
-        let tmp = document.createElement('button');
-        document.body.appendChild(tmp);
-        tmp.setAttribute('id', entry.value);
-        tmp.setAttribute('class', 'btn');
-        tmp.textContent = entry.sign;
+        let tmp;
+        tmp = makeElement(entry.value, undefined, entry.sign);
         entry.node = tmp;
     };
 
     // add equal button
-    equalBtn = document.createElement('button');
-    document.body.appendChild(equalBtn);
-    equalBtn.setAttribute('id', 'equalbtn');
-    equalBtn.setAttribute('class', 'btn');
-    equalBtn.textContent = '=';
+    equalBtn = makeElement('equalbtn', undefined, '=')
 
 })();
 
@@ -119,7 +119,6 @@ const addEvent = (() => {
     for (let each in operations) {
         operations[each].node.addEventListener('click', () => {
             if (total == null) {
-                // total = Math.round((Number(display.textContent)) * 100) / 100;
                 total = Number(display.textContent);
                 currentOperator = operations[each].value;
                 operatorClicked = true;
@@ -127,7 +126,6 @@ const addEvent = (() => {
             } else {
                 console.log(operations[each].value);
                 if (currentOperator == null) currentOperator = operations[each].value;
-                // userInput = Math.round((Number(display.textContent)) * 100) / 100;
                 userInput = Number(display.textContent);
                 if (!operatorClicked) calculate(userInput, currentOperator);
                 currentOperator = operations[each].value;
@@ -137,7 +135,7 @@ const addEvent = (() => {
         });
     }
 
-    // clear-all button events
+    // clear-all button event
     clearAllBtn.addEventListener('click', () => {
         userInput = null;
         currentOperator = null;
@@ -146,20 +144,28 @@ const addEvent = (() => {
         display.textContent = '0';
     })
 
-    // undo button events
+    // undo button event
     undoBtn.addEventListener('click', () => {
         let text = display.textContent;
         if (text == 0);
-        else {
+        else (text / 10 <= 1 && text.length == 1) ? display.textContent = '0' : display.textContent = text.slice(0, text.length - 1);
+    })
 
-            // todo
-            (text / 10 <= 1 && text.length == 1) ? display.textContent = '0' : display.textContent = text.slice(0, text.length - 1);
-        }
+    // equal button event
+    equalBtn.addEventListener('click', () => {
+        userInput = Number(display.textContent);
+        calculate(userInput, currentOperator);
+        display.textContent = total;
+
+        equalClicked = true;
+        operatorClicked = false;
+        total = null;
+        currentOperator = null;
+        userInput = null;
     })
 })();
 
-
-// console.log(calculate(1,2,operations.add));
+// calculation handlers
 function calculate(num1, operation) {
     switch (operation) {
         case(operations.add.value): 
@@ -180,8 +186,9 @@ function calculate(num1, operation) {
 }
 
 
+
 // ----------------------------------------------------------
-// Summing all numbers
+// Summing all numbers from any number of arguements
 // ----------------------------------------------------------
 // function sum() {
 //     let total = null;
@@ -193,12 +200,17 @@ function calculate(num1, operation) {
 
 
 
-// bugs
+// issues
+// ----------------------------------------------------------
 // 2/2 AT THE START IS BUGGING // solved
 // infinity when divided by 2
 // floating precision // solved
+// after equal pressed, the next input doesn't reset, it add to the display
+
 
 // todo
+// ----------------------------------------------------------
 // = functionality
 // +/- functionality
 // check ce functionality when floating points are added
+// changing number of decimal points to calculate
