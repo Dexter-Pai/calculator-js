@@ -50,10 +50,10 @@ const operations = {
         value: 'subtract', sign: '-',
     },
     multiply: {
-        value: 'multiply', sign: '*',
+        value: 'multiply', sign: 'x',
     },
     divide: {
-        value: 'divide', sign: '/',
+        value: 'divide', sign: '÷',
     },
 }
 
@@ -153,6 +153,9 @@ const addEvent = (() => {
 
     // equal button event
     equalBtn.addEventListener('click', () => {
+        if (total === null) {
+            total = Number(display.textContent);
+        }
         userInput = Number(display.textContent);
         calculate(userInput, currentOperator);
         display.textContent = total;
@@ -215,7 +218,8 @@ function calculate(num1, operation) {
 // 2/2 AT THE START IS BUGGING // solved
 // infinity when divided by 2
 // floating precision // solved
-// after equal pressed, the next input doesn't reset, it add to the display
+// after equal pressed, the next input doesn't reset, it add to the  // solved
+// after +- is pressed, if you press equal, it disappear // solved
 
 
 // todo
@@ -224,3 +228,4 @@ function calculate(num1, operation) {
 // +/- functionality
 // check ce functionality when floating points are added
 // changing number of decimal points to calculate
+// deleting each character in a float point
