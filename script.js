@@ -17,11 +17,12 @@ class Button {
     addEvent() {
         this.node.addEventListener('click', () => {
             if (equalClicked) {
+                decimalClicked = false;
                 display.textContent = '';
                 equalClicked = false;
             }
             if (!operatorClicked) {
-                if (display.textContent == 0) display.textContent = `${this.value}`;
+                if (display.textContent == 0 && !decimalClicked) display.textContent = `${this.value}`;
                 else display.textContent += `${this.value}`;
             } else {
                 operatorClicked = false;
@@ -36,10 +37,12 @@ class Button {
 // Global Variables
 // ----------------------------------------------------------
 let display;
-let equalBtn, changeSignBtn, clearAllBtn, undoBtn;   
+let equalBtn, changeSignBtn, clearAllBtn, undoBtn, decimalBtn;   
 let currentOperator, userInput, total = null;
 let operatorClicked = false;
 let equalClicked = false;
+let decimalClicked = false;
+
 const buttons = [];
 
 const operations = {
@@ -97,6 +100,9 @@ const addDOM = (() => {
         buttons.push(tmp);
     }
 
+    // add decimal button
+    decimalBtn = makeElement('decimalBtn', 'btn', '.');
+
     // add operation buttons
     for (const each in operations) {
         let entry = operations[each];
@@ -118,6 +124,7 @@ const addEvent = (() => {
     // operator buttons events
     for (let each in operations) {
         operations[each].node.addEventListener('click', () => {
+            decimalClicked = false;
             if (total == null) {
                 total = Number(display.textContent);
                 currentOperator = operations[each].value;
@@ -141,6 +148,7 @@ const addEvent = (() => {
         currentOperator = null;
         total = null;
         operatorClicked = false;
+        decimalClicked = false;
         display.textContent = '0';
     })
 
@@ -148,11 +156,15 @@ const addEvent = (() => {
     undoBtn.addEventListener('click', () => {
         let text = display.textContent;
         if (text == 0);
+        // features to implement
+        // text. include . == false and text. length == 1, display '0'
+        // (text. include ('.') and text . length == 2), remove '.'
         else (text / 10 <= 1 && text.length == 1) ? display.textContent = '0' : display.textContent = text.slice(0, text.length - 1);
     })
 
     // equal button event
     equalBtn.addEventListener('click', () => {
+        decimalClicked == false;
         if (total === null) {
             total = Number(display.textContent);
         }
@@ -162,6 +174,8 @@ const addEvent = (() => {
 
         equalClicked = true;
         operatorClicked = false;
+        if (!total.toString().includes('.'))
+            decimalClicked = false;
         total = null;
         currentOperator = null;
         userInput = null;
@@ -176,16 +190,27 @@ const addEvent = (() => {
             display.textContent = tmp.join('');
         } ;
     })
+
+    // decimal button event
+    decimalBtn.addEventListener('click', () => {
+        if (!decimalClicked) {
+            display.textContent += '.';
+        decimalClicked = true;
+    }
+    })
 })();
 
 // calculation handlers
 function calculate(num1, operation) {
+    if (num1[num1.length - 1] == '.') num1.replace('.', '');
     switch (operation) {
         case(operations.add.value): 
         total += num1;
+        total = Math.round(total * 1000) / 1000;
         break;
         case(operations.subtract.value): 
         total -= num1;
+        total = Math.round(total * 1000) / 1000;
         break;
         case(operations.multiply.value): 
         total *= num1;
@@ -220,6 +245,10 @@ function calculate(num1, operation) {
 // floating precision // solved
 // after equal pressed, the next input doesn't reset, it add to the  // solved
 // after +- is pressed, if you press equal, it disappear // solved
+// if user input 0.1, 0. works fine, 1 is like a new number for some reason.
+// 9. = 9 and then press . and it won't add point but point button is already clicked // solved
+// 0.9 = 0.9 and then press . 0.9. // solved
+// equal clicked on 0.9 and using CE will undo to 0. but totally resets when you input again
 
 
 // todo
