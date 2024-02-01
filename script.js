@@ -37,7 +37,7 @@ class Button {
 // Global Variables
 // ----------------------------------------------------------
 let display;
-let equalBtn, changeSignBtn, clearAllBtn, undoBtn, decimalBtn;   
+let equalBtn, changeSignBtn, clearAllBtn, undoBtn, decimalBtn, percentBtn;   
 let currentOperator, userInput, total = null;
 let operatorClicked = false;
 let equalClicked = false;
@@ -46,6 +46,9 @@ let decimalClicked = false;
 const buttons = [];
 
 const operations = {
+    percent: {
+        value: 'percent', sign: '%',
+    },
     add: {
         value: 'add', sign: '+',
     },
@@ -66,7 +69,7 @@ const operations = {
 const addDOM = (() => {
 
     //template function for making elements and asigning values
-    function makeElement(idName = '', className = '', textContent = '', elementType = 'button', parentNode = document.body) {
+    function makeElement(idName = '', className = 'btn', textContent = '', elementType = 'button', parentNode = document.body) {
         let element = document.createElement(elementType);
         parentNode.appendChild(element);
         element.textContent = textContent;
