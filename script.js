@@ -9,7 +9,7 @@ class Button {
     }
     initialize() {
         this.node = document.createElement('button');
-        document.body.appendChild(this.node);
+        calculator.appendChild(this.node);
         this.node.setAttribute('id', `${this.name}`);
         this.node.setAttribute('class', `btn`);
         this.node.textContent = `${this.value}`;
@@ -74,13 +74,17 @@ const operations = {
     },
 }
 
+const calculator = document.querySelector('.calculator');
+
 // ----------------------------------------------------------
 // Adding DOM Elements
 // ----------------------------------------------------------
 const addDOM = (() => {
 
     //template function for making elements and asigning values
-    function makeElement(idName = '', className = 'btn', textContent = '', elementType = 'button', parentNode = document.body) {
+    function makeElement(idName = '', className = 'btn', 
+    textContent = '', elementType = 'button', 
+    parentNode = calculator) {
         let element = document.createElement(elementType);
         parentNode.appendChild(element);
         element.textContent = textContent;
@@ -318,7 +322,7 @@ function convertPercentToNumber(string) {
 // issues
 // ----------------------------------------------------------
 // 2/2 AT THE START IS BUGGING // solved
-// infinity when divided by 2
+// infinity when divided by 2 // solved
 // floating precision // solved
 // after equal pressed, the next input doesn't reset, it add to the  // solved
 // after +- is pressed, if you press equal, it disappear // solved
@@ -328,8 +332,8 @@ function convertPercentToNumber(string) {
 // equal clicked on 0.9 and using CE will undo to 0. but totally resets when you input again // solved
 // 0.0 = 0, . and then if you add 9, the 0. disappears // solved
 // 0.09 + and when you click . , 0.09. // solved
+// 3.009 + 0.001 = NaN; // solved // major bug :(
 // deleting each character 0.03 CE => 0.0 and you cannot CE anymore
-// 3.009 + 0.001 = NaN; // solved
 
 // todo
 // ----------------------------------------------------------
