@@ -16,18 +16,20 @@ class Button {
     }
     addEvent() {
         this.node.addEventListener('click', () => {
-            if (equalClicked) {
-                decimalClicked = false;
-                display.textContent = '';
-                equalClicked = false;
-            }
-            if (!operatorClicked) {
-                if (display.textContent == 0 && !decimalClicked) display.textContent = `${this.value}`;
-                else display.textContent += `${this.value}`;
-            } else {
-                operatorClicked = false;
-                display.textContent = '';
-                display.textContent += `${this.value}`;
+            if (!percentClicked) {
+                if (equalClicked) {
+                    decimalClicked = false;
+                    display.textContent = '';
+                    equalClicked = false;
+                }
+                if (!operatorClicked) {
+                    if (display.textContent == 0 && !decimalClicked) display.textContent = `${this.value}`;
+                    else display.textContent += `${this.value}`;
+                } else {
+                    operatorClicked = false;
+                    display.textContent = '';
+                    display.textContent += `${this.value}`;
+                }   
             }
         });
     }
@@ -42,13 +44,14 @@ let currentOperator, userInput, total = null;
 let operatorClicked = false;
 let equalClicked = false;
 let decimalClicked = false;
+let percentClicked = false;
 
 const buttons = [];
 
 const operations = {
-    percent: {
-        value: 'percent', sign: '%',
-    },
+    // percent: {
+    //     value: 'percent', sign: '%',
+    // },
     add: {
         value: 'add', sign: '+',
     },
@@ -93,6 +96,9 @@ const addDOM = (() => {
     // add change sign button
     changeSignBtn = makeElement('sign', 'btn', '+/-');
 
+    // add percent button
+    percentBtn = makeElement('percent', 'btn', '%');
+
     // add buttons 1 to 0
     for (let i = 1; i <= 10; i++) {
         let tmp;
@@ -128,15 +134,20 @@ const addEvent = (() => {
     for (let each in operations) {
         operations[each].node.addEventListener('click', () => {
             decimalClicked = false;
+            percentClicked = false;
+
+            let text = getDisplayText();
+            if (text.includes('%'));
+
             if (total == null) {
-                total = Number(display.textContent);
+                total = text;
                 currentOperator = operations[each].value;
                 operatorClicked = true;
 
             } else {
                 console.log(operations[each].value);
                 if (currentOperator == null) currentOperator = operations[each].value;
-                userInput = Number(display.textContent);
+                userInput = text;
                 if (!operatorClicked) calculate(userInput, currentOperator);
                 currentOperator = operations[each].value;
                 operatorClicked = true;
@@ -157,29 +168,38 @@ const addEvent = (() => {
 
     // undo button event
     undoBtn.addEventListener('click', () => {
-        let text = display.textContent;
-        if (text == 0);
-        // features to implement
-        // text. include . == false and text. length == 1, display '0'
-        // (text. include ('.') and text . length == 2), remove '.'
-        else if (text / 10 <= 1 && text.length == 1) {
-            display.textContent = '0';
-            operatorClicked = false;
-            equalClicked = false;
-        } else {
-            display.textContent = text.slice(0, text.length - 1);
-            operatorClicked = false;
-            equalClicked = false;
-        } 
+        let text = getDisplayText();
+
+        // handling percent sign
+        if (display.textContent.charCodeAt(text.length - 1) == 37){
+            percentClicked = false;
+            display.textContent = display.textContent.replace('%', '');
+        }
+        else{
+            if (text == 0);
+            else if (text / 10 <= 1 && text.length == 1) {
+                display.textContent = '0';
+                operatorClicked = false;
+                equalClicked = false;
+            } else {
+                display.textContent = text.slice(0, text.length - 1);
+                operatorClicked = false;
+                equalClicked = false;
+            } 
+        }
     })
 
     // equal button event
     equalBtn.addEventListener('click', () => {
-        decimalClicked == false;
+        decimalClicked = false;
+        percentClicked = false;
+
+        let text = getDisplayText();
+
         if (total === null) {
-            total = Number(display.textContent);
+            total = text;
         }
-        userInput = Number(display.textContent);
+        userInput = text;
         calculate(userInput, currentOperator);
         display.textContent = total;
 
@@ -213,6 +233,13 @@ const addEvent = (() => {
         equalClicked = false;
         }
     })
+
+    // percent button event
+    percentBtn.addEventListener('click', () => {
+        if (!percentClicked) display.textContent += '%';
+        percentClicked = true;
+
+    })
 })();
 
 // calculation handlers
@@ -238,7 +265,19 @@ function calculate(num1, operation) {
     }
 }
 
+// function for getting display text
+function getDisplayText(format = 'string') {
+    let text = display.textContent;
+    if (text.includes('%')) text = convertPercentToNumber(text);
+    if (format == 'string')  return String(text);
+    if (format == 'number') return text;
+}
 
+// convert percent to decimal number
+function convertPercentToNumber(string) {
+    string = string.replace('%','');    
+    return Math.round((Number(string) / 100)* 1000) / 1000;
+}
 
 // ----------------------------------------------------------
 // Summing all numbers from any number of arguements
@@ -266,7 +305,7 @@ function calculate(num1, operation) {
 // equal clicked on 0.9 and using CE will undo to 0. but totally resets when you input again // solved
 // 0.0 = 0, . and then if you add 9, the 0. disappears // solved
 // 0.09 + and when you click . , 0.09. // solved
-
+// deleting each character 0.03 CE => 0.0 and you cannot CE anymore
 
 // todo
 // ----------------------------------------------------------
