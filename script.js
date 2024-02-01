@@ -201,10 +201,14 @@ const addEvent = (() => {
 
     // decimal button event
     decimalBtn.addEventListener('click', () => {
-        if (!decimalClicked) {
-            display.textContent += '.';
-        decimalClicked = true;
-    }
+        if (operatorClicked) ;
+        else {
+            if (!decimalClicked) {
+                display.textContent += '.';
+            decimalClicked = true;
+        }
+        equalClicked = false;
+        }
     })
 })();
 
@@ -253,11 +257,12 @@ function calculate(num1, operation) {
 // floating precision // solved
 // after equal pressed, the next input doesn't reset, it add to the  // solved
 // after +- is pressed, if you press equal, it disappear // solved
-// if user input 0.1, 0. works fine, 1 is like a new number for some reason.
+// if user input 0.1, 0. works fine, 1 is like a new number for some reason. // solved
 // 9. = 9 and then press . and it won't add point but point button is already clicked // solved
 // 0.9 = 0.9 and then press . 0.9. // solved
 // equal clicked on 0.9 and using CE will undo to 0. but totally resets when you input again // solved
-// 0.0 = 0, . and then if you add 9, the 0. disappears
+// 0.0 = 0, . and then if you add 9, the 0. disappears // solved
+// 0.09 + and when you click . , 0.09. // solved
 
 
 // todo
