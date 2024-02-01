@@ -45,6 +45,11 @@ class Button {
 // Global Variables
 // ----------------------------------------------------------
 let display;
+
+// changing this value will change the decimal of the result (default 3: will calculate up to 0.001th place)
+let decimalsInResult = 0; // maximum 15 (or it will truncate)
+// if you want to just calculate in Int values, just put 0 in it. :)
+
 let equalBtn, changeSignBtn, clearAllBtn, undoBtn, decimalBtn, percentBtn;   
 let currentOperator, userInput, total = null;
 let operatorClicked = false;
@@ -246,25 +251,39 @@ const addEvent = (() => {
     })
 })();
 
-// calculation handlers
+// ----------------------------------------------------------
+// Calculation Central, Beware of Changes :3
+// ----------------------------------------------------------
+
+// determining decimal for calculation
+decimalsInResult = (() => {
+    let value = 1;
+    for(let i = 0; i < decimalsInResult; i++) {
+        value *= 10;
+    }
+    return value;
+})();
+
+
+// main calculation handlers
 function calculate(num1, operation) {
     if (num1[num1.length - 1] == '.') num1.replace('.', '');
     switch (operation) {
         case(operations.add.value): 
         total += num1;
-        total = Math.round(total * 1000) / 1000;
+        total = Math.round(total * decimalsInResult) / decimalsInResult;
         break;
         case(operations.subtract.value): 
         total -= num1;
-        total = Math.round(total * 1000) / 1000;
+        total = Math.round(total * decimalsInResult) / decimalsInResult;
         break;
         case(operations.multiply.value): 
         total *= num1;
-        total = Math.round(total * 1000) / 1000;
+        total = Math.round(total * decimalsInResult) / decimalsInResult;
         break;
         case(operations.divide.value): 
         total /= num1;
-        total = Math.round(total * 1000) / 1000;
+        total = Math.round(total * decimalsInResult) / decimalsInResult;
         break;
     }
 }
@@ -280,7 +299,7 @@ function getDisplayText(format = 'string') {
 // convert percent to decimal number
 function convertPercentToNumber(string) {
     string = string.replace('%','');    
-    return Math.round((Number(string) / 100)* 1000) / 1000;
+    return Math.round((Number(string) / 100)* decimalsInResult) / decimalsInResult;
 }
 
 // ----------------------------------------------------------
