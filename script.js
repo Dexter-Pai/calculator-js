@@ -16,21 +16,27 @@ class Button {
     }
     addEvent() {
         this.node.addEventListener('click', () => {
-            if (!percentClicked) {
-                if (equalClicked) {
-                    decimalClicked = false;
-                    display.textContent = '';
-                    equalClicked = false;
-                }
-                if (!operatorClicked) {
-                    if (display.textContent == 0 && !decimalClicked) display.textContent = `${this.value}`;
-                    else display.textContent += `${this.value}`;
-                } else {
-                    operatorClicked = false;
-                    display.textContent = '';
-                    display.textContent += `${this.value}`;
-                }   
+            if (percentClicked) {
+                percentClicked = false;
+                operatorClicked = true;
+                currentOperator = 'multiply';
+                total = getDisplayText('number');
             }
+
+            if (equalClicked) {
+                decimalClicked = false;
+                display.textContent = '';
+                equalClicked = false;
+            }
+            if (!operatorClicked) {
+                if (display.textContent == 0 && !decimalClicked) display.textContent = `${this.value}`;
+                else display.textContent += `${this.value}`;
+            } else {
+                operatorClicked = false;
+                display.textContent = '';
+                display.textContent += `${this.value}`;
+            }   
+            
         });
     }
 }
@@ -49,9 +55,6 @@ let percentClicked = false;
 const buttons = [];
 
 const operations = {
-    // percent: {
-    //     value: 'percent', sign: '%',
-    // },
     add: {
         value: 'add', sign: '+',
     },
@@ -137,17 +140,18 @@ const addEvent = (() => {
             percentClicked = false;
 
             let text = getDisplayText();
-            if (text.includes('%'));
+            if (percentClicked) {
+                percentClicked = false;
+            }
 
             if (total == null) {
-                total = text;
+                total = Number(text);
                 currentOperator = operations[each].value;
                 operatorClicked = true;
-
             } else {
                 console.log(operations[each].value);
                 if (currentOperator == null) currentOperator = operations[each].value;
-                userInput = text;
+                userInput = Number(text);
                 if (!operatorClicked) calculate(userInput, currentOperator);
                 currentOperator = operations[each].value;
                 operatorClicked = true;
@@ -197,9 +201,9 @@ const addEvent = (() => {
         let text = getDisplayText();
 
         if (total === null) {
-            total = text;
+            total = Number(text);
         }
-        userInput = text;
+        userInput = Number(text);
         calculate(userInput, currentOperator);
         display.textContent = total;
 
@@ -306,6 +310,7 @@ function convertPercentToNumber(string) {
 // 0.0 = 0, . and then if you add 9, the 0. disappears // solved
 // 0.09 + and when you click . , 0.09. // solved
 // deleting each character 0.03 CE => 0.0 and you cannot CE anymore
+// 3.009 + 0.001 = NaN; // solved
 
 // todo
 // ----------------------------------------------------------
