@@ -159,7 +159,15 @@ const addEvent = (() => {
         // features to implement
         // text. include . == false and text. length == 1, display '0'
         // (text. include ('.') and text . length == 2), remove '.'
-        else (text / 10 <= 1 && text.length == 1) ? display.textContent = '0' : display.textContent = text.slice(0, text.length - 1);
+        else if (text / 10 <= 1 && text.length == 1) {
+            display.textContent = '0';
+            operatorClicked = false;
+            equalClicked = false;
+        } else {
+            display.textContent = text.slice(0, text.length - 1);
+            operatorClicked = false;
+            equalClicked = false;
+        } 
     })
 
     // equal button event
@@ -248,7 +256,8 @@ function calculate(num1, operation) {
 // if user input 0.1, 0. works fine, 1 is like a new number for some reason.
 // 9. = 9 and then press . and it won't add point but point button is already clicked // solved
 // 0.9 = 0.9 and then press . 0.9. // solved
-// equal clicked on 0.9 and using CE will undo to 0. but totally resets when you input again
+// equal clicked on 0.9 and using CE will undo to 0. but totally resets when you input again // solved
+// 0.0 = 0, . and then if you add 9, the 0. disappears
 
 
 // todo
