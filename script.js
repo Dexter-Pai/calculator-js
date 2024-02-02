@@ -96,7 +96,6 @@ const addDOM = (() => {
 
     // add display
     display = makeElement('displayArea', undefined, 'display', undefined, 'div');
-    display.style.height = '2rem';
     display.textContent = 0;
 
     // add clear all button
