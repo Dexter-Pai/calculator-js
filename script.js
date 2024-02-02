@@ -2,16 +2,17 @@
 // Constructor
 // ----------------------------------------------------------
 class Button {
-    constructor (name, value) {
+    constructor (name, value, rowNoToAppend) {
         this.name = name;
         this.value = value;
         this.node;
+        this.rowNoToAppend = rowNoToAppend;
     }
     initialize() {
         this.node = document.createElement('button');
-        calculator.appendChild(this.node);
-        this.node.setAttribute('id', `${this.name}`);
+        document.querySelector(`.row${this.rowNoToAppend}`).appendChild(this.node);
         this.node.setAttribute('class', `btn`);
+        this.node.setAttribute('id', `${this.name}`);
         this.node.textContent = `${this.value}`;
     }
     addEvent() {
@@ -47,7 +48,7 @@ class Button {
 let display;
 
 // changing this value will change the decimal of the result (default 3: will calculate up to 0.001th place)
-let decimalsInResult = 0; // maximum 15 (or it will truncate)
+let decimalsInResult = 3; // maximum 15 (or it will truncate)
 // if you want to just calculate in Int values, just put 0 in it. :)
 
 let equalBtn, changeSignBtn, clearAllBtn, undoBtn, decimalBtn, percentBtn;   
@@ -82,11 +83,10 @@ const calculator = document.querySelector('.calculator');
 const addDOM = (() => {
 
     //template function for making elements and asigning values
-    function makeElement(idName = '', className = 'btn', 
-    textContent = '', elementType = 'button', 
-    parentNode = calculator) {
+    function makeElement(parentNode = calculator, idName = '', className = 'btn', 
+    textContent = '', elementType = 'button') {
         let element = document.createElement(elementType);
-        parentNode.appendChild(element);
+        document.querySelector(`.${parentNode}`).appendChild(element);
         element.textContent = textContent;
         element.setAttribute('class', className);
         element.setAttribute('id', idName);
@@ -95,45 +95,52 @@ const addDOM = (() => {
     // ------------------------------------------------------
 
     // add display
-    display = makeElement(undefined, 'display', undefined, 'div');
+    display = makeElement('displayArea', undefined, 'display', undefined, 'div');
     display.style.height = '2rem';
     display.textContent = 0;
 
     // add clear all button
-    clearAllBtn = makeElement('cBtn', 'btn', 'C');
+    clearAllBtn = makeElement('row1', 'cBtn', 'btn', 'C');
 
     // add undo button
-    undoBtn = makeElement('cEBtn', 'btn', 'CE');
-
-    // add change sign button
-    changeSignBtn = makeElement('sign', 'btn', '+/-');
+    undoBtn = makeElement('row2', 'cEBtn', 'btn', 'CE');
 
     // add percent button
-    percentBtn = makeElement('percent', 'btn', '%');
+    percentBtn = makeElement('row3', 'percent', 'btn', '%');
 
-    // add buttons 1 to 0
-    for (let i = 1; i <= 10; i++) {
+    // add buttons 1 to 9
+    for (let i = 9; i >= 1; i--) {
         let tmp;
-        if (i == 10) tmp = new Button('btn0', 0);
-        else tmp = new Button(`btn${i}`, i);
+        if (i == 1 || i == 4 || i == 7) tmp = new Button(`btn${i}`, i, 1);
+        else if (i == 2 || i == 5 || i == 8) tmp = new Button(`btn${i}`, i, 2);
+        else if (i == 3 || i == 6 || i == 9) tmp = new Button(`btn${i}`, i, 3);
         tmp.initialize();
         tmp.addEvent();
         buttons.push(tmp);
     }
 
+    // add button 0
+    let tmp = new Button('btn0', 0, 2);
+    tmp.initialize();
+    tmp.addEvent();
+    buttons.push(tmp);
+
+    // add change sign button
+    changeSignBtn = makeElement('row1', 'sign', 'btn', '+/-');
+
     // add decimal button
-    decimalBtn = makeElement('decimalBtn', 'btn', '.');
+    decimalBtn = makeElement('row3', 'decimalBtn', 'btn', '.');
 
     // add operation buttons
     for (const each in operations) {
         let entry = operations[each];
         let tmp;
-        tmp = makeElement(entry.value, undefined, entry.sign);
+        tmp = makeElement('row4', entry.value, undefined, entry.sign);
         entry.node = tmp;
     };
 
     // add equal button
-    equalBtn = makeElement('equalbtn', undefined, '=')
+    equalBtn = makeElement('row4', 'equalbtn', undefined, '=')
 
 })();
 
@@ -251,7 +258,6 @@ const addEvent = (() => {
     percentBtn.addEventListener('click', () => {
         if (!percentClicked) display.textContent += '%';
         percentClicked = true;
-
     })
 })();
 

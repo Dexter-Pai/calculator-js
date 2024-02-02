@@ -16,4 +16,16 @@
     background-color: blue;
     width: 500px;
     height: 700px;
+    display: flex;
+    flex-direction: column;
+}
+
+.buttonArea {
+    display: flex;
+    flex-grow: 1;
+}
+
+.buttonArea > * {
+    display: flex;
+    flex-direction: column;
 }
