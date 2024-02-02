@@ -4,15 +4,9 @@
     box-sizing: border-box;
 }
 
-/* button, input[type="submit"], input[type="reset"] {
-	background: none;
-	color: inherit;
-	border: none;
-	padding: 0;
-	font: inherit;
-	cursor: pointer;
-	outline: inherit;
-} */
+body {
+    background-color: grey;
+}
 
 .viewport {
     width: 100%;
@@ -24,13 +18,17 @@
 
 .calculator {
     background-color: aliceblue;
+    border-radius: 10px;
     width: 500px;
     height: 700px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: stretch;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
+
+
 
 .displayArea {
     flex-grow: 1;
@@ -42,7 +40,8 @@
 
 .display {
     text-align: right;
-    padding: 20px 20px;
+    padding: 20px 40px;
+    font-size: 50px;
 }
 
 .calculationArea {
@@ -71,7 +70,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: stretch;
-    flex: 1 1 auto;
+    flex: 1 1 40px;
     gap: 10px;
 }
 
@@ -79,7 +78,9 @@
     flex: 1 1 auto;
 }
 
-
+/* ================
+Credit to https://getcssscan.com/css-buttons-examples for this button design
+================ */
 .btn {
   align-items: center;
   appearance: none;
@@ -129,5 +130,18 @@
 
         .sliderArea {
             flex:4 1 auto;
+        }
+
+        .buttonArea {
+            gap: 5px;
+        }
+
+        .buttonArea > * {
+            gap: 5px;
+        }
+
+        .display {
+            padding: 20px 20px;
+            font-size: 20px;
         }
 }
