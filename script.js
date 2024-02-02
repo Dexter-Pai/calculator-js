@@ -20,6 +20,7 @@ class Button {
             if (percentClicked) {
                 percentClicked = false;
                 operatorClicked = true;
+                signArea.textContent = 'x';
                 currentOperator = 'multiply';
                 total = getDisplayText('number');
             }
@@ -37,7 +38,7 @@ class Button {
                 display.textContent = '';
                 display.textContent += `${this.value}`;
             }   
-            
+            equalArea.textContent = '';
         });
     }
 }
@@ -49,7 +50,9 @@ let display;
 
 // changing this value will change the decimal of the result (default 3: will calculate up to 0.001th place)
 let decimalsInResult = 3; // maximum 15 (or it will truncate)
-// if you want to just calculate in Int values, just put 0 in it. :)
+// if you want to just calculate in Int values, just put 0 in it. :) (not recommanded)
+// % calculations will bug if you change the decimal value to < 3 because it calculates by dividing 100 and rounding the number. 
+// optimal value is between 3 and 15
 
 let equalBtn, changeSignBtn, clearAllBtn, undoBtn, decimalBtn, percentBtn;   
 let currentOperator, userInput, total = null;
@@ -76,7 +79,8 @@ const operations = {
 }
 
 const calculator = document.querySelector('.calculator');
-
+const signArea = document.querySelector('.signArea');
+const equalArea = document.querySelector('.equalArea');
 // ----------------------------------------------------------
 // Adding DOM Elements
 // ----------------------------------------------------------
@@ -172,6 +176,7 @@ const addEvent = (() => {
                 operatorClicked = true;
             }
             display.textContent = total;
+            signArea.textContent = operations[each].sign;
         });
     }
 
@@ -183,6 +188,8 @@ const addEvent = (() => {
         operatorClicked = false;
         decimalClicked = false;
         display.textContent = '0';
+        signArea.textContent = '';
+        equalArea.textContent = '';
     })
 
     // undo button event
@@ -195,8 +202,8 @@ const addEvent = (() => {
             display.textContent = display.textContent.replace('%', '');
         }
         else{
-            if (text == 0);
-            else if (text / 10 <= 1 && text.length == 1) {
+            if (text == 0 && text.length == 1);
+            else if (text.length == 1) {
                 display.textContent = '0';
                 operatorClicked = false;
                 equalClicked = false;
@@ -206,6 +213,8 @@ const addEvent = (() => {
                 equalClicked = false;
             } 
         }
+        signArea.textContent = '';
+        equalArea.textContent = '';
     })
 
     // equal button event
@@ -229,6 +238,8 @@ const addEvent = (() => {
         total = null;
         currentOperator = null;
         userInput = null;
+        signArea.textContent = '';
+        equalArea.textContent = '=';
     })
 
     // change sign button event
@@ -322,7 +333,9 @@ function convertPercentToNumber(string) {
 //     return total;
 // }
 
-
+// ----------------------------------------------------------
+// Misc
+// ----------------------------------------------------------
 
 // issues
 // ----------------------------------------------------------
@@ -338,12 +351,8 @@ function convertPercentToNumber(string) {
 // 0.0 = 0, . and then if you add 9, the 0. disappears // solved
 // 0.09 + and when you click . , 0.09. // solved
 // 3.009 + 0.001 = NaN; // solved // major bug :(
-// deleting each character 0.03 CE => 0.0 and you cannot CE anymore
+// deleting each character 0.03 CE => 0.0 and you cannot CE anymore // solved
 
 // todo
 // ----------------------------------------------------------
-// = functionality
-// +/- functionality
-// check ce functionality when floating points are added
-// changing number of decimal points to calculate
-// deleting each character in a float point
+// changing number of decimal points to calculate, put in a slider for decimal precision
