@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+a {
+    text-decoration: none;
+    color: white;
+}
+
 body {
     background-color: grey;
 }
@@ -101,7 +106,7 @@ body {
     position: fixed;
     bottom: 0;
     margin: 20px;
-    font-size: large;
+    font-size: larger;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     color: white;
@@ -181,5 +186,9 @@ Credit to https://getcssscan.com/css-buttons-examples for this button design
             width: 30px;
             height: 30px;
             line-height: 30px;
+        }
+
+        .footer {
+            font-size: medium;
         }
 }
