@@ -158,37 +158,46 @@ Credit to https://getcssscan.com/css-buttons-examples for this button design
 }
 
 @media screen and (max-width: 500px) {
-        .calculator {
-            width: 250px;
-            height: 300px;
-        }
+    .viewport {
+        background-image: url(https://wallpapers.com/images/hd/nezuko-desktop-v0iptv5xav0z60ws.jpg);
+        background-position: center;
+        background-size: cover;
+    }
 
-        .sliderArea {
-            flex:4 1 auto;
-            padding: 0 20px;
-        }
+    .calculator {
+        margin: 10px;
+        background-color: transparent;
+        backdrop-filter: blur(15px);
+        width: 100vmin;
+        height: calc(100vmin + 20vmin);
+    }
 
-        .buttonArea {
-            gap: 5px;
-        }
+    .sliderArea {
+        flex:4 1 auto;
+        padding: 0 20px;
+    }
 
-        .buttonArea > * {
-            gap: 5px;
-        }
+    .buttonArea {
+        gap: 5px;
+    }
 
-        .display {
-            padding: 20px 20px;
-            font-size: 20px;
-        }
+    .buttonArea > * {
+        gap: 5px;
+    }
 
-        .signArea, .equalArea {
-            font-size: 20px;
-            width: 30px;
-            height: 30px;
-            line-height: 30px;
-        }
+    .display {
+        padding: 20px 20px;
+        font-size: 20px;
+    }
 
-        .footer {
-            font-size: medium;
-        }
+    .signArea, .equalArea {
+        font-size: 20px;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+    }
+
+    .footer {
+        font-size: medium;
+    }
 }
